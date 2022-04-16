@@ -59,6 +59,7 @@ public class EncodedResource implements InputStreamSource {
 	 * @param resource the {@code Resource} to hold (never {@code null})
 	 */
 	public EncodedResource(Resource resource) {
+		//默认encoding和charset都是null
 		this(resource, null, null);
 	}
 
@@ -136,6 +137,7 @@ public class EncodedResource implements InputStreamSource {
 	 * @see #getInputStream()
 	 */
 	public Reader getReader() throws IOException {
+		//默认encoding和charset都是null
 		if (this.charset != null) {
 			return new InputStreamReader(this.resource.getInputStream(), this.charset);
 		}

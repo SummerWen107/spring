@@ -7,6 +7,7 @@
 	</module>
 
 	<!-- Root Checks -->
+	<!-- 检查SpringHeader 每个类开头部分必须是版权声明-->
 	<module name="io.spring.javaformat.checkstyle.check.SpringHeaderCheck">
 		<property name="fileExtensions" value="java" />
 		<property name="headerType" value="apache2"/>
@@ -19,6 +20,7 @@
 
 	<!-- TreeWalker Checks -->
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
+		<module name="SuppressionCommentFilter"/>
 		<!-- Annotations -->
 		<module name="com.puppycrawl.tools.checkstyle.checks.annotation.AnnotationUseStyleCheck">
 			<property name="elementStyle" value="compact" />
@@ -44,6 +46,7 @@
 		<!-- Class Design -->
 		<module name="com.puppycrawl.tools.checkstyle.checks.design.FinalClassCheck" />
 		<module name="com.puppycrawl.tools.checkstyle.checks.design.InterfaceIsTypeCheck" />
+		<!-- 检查HideUtilityClassConstructor 工具类应私有化构造器 并声明为final 避免被创建对象-->
 		<module name="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck" />
 		<module name="com.puppycrawl.tools.checkstyle.checks.design.MutableExceptionCheck">
 			<property name="format" value="^.*Exception$" />

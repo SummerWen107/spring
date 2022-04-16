@@ -50,6 +50,7 @@ task api(type: Javadoc) {
 		if(JavaVersion.current().isJava9Compatible()) {
 			addBooleanOption('html5', true)
 		}
+        failOnError = false
 	}
 	source moduleProjects.collect { project ->
 		project.sourceSets.main.allJava

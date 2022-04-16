@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   https://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+
+	<bean id="getBeanTest" lazy-init="false" class="com.summer.spring.lookup.GetBeanTest">
+		<!--获取器注入-->
+		<!--获取器注入是一种特殊的方法注入，它是把一个 方法 声明为 返回某种类型的bean，
+		但实际要返回的bean是在配置文件里面配置的，此方法可用在设计有些可插拔的功能上，解除程序依赖-->
+
+		<lookup-method name="getBean" bean="teacher"/>
+		<!--当我们的业务变更或者在其他情况下，teacher里面的业务逻辑已经不再符合我们的业务要求，需要进行替换怎么办呢？
+			将teacher 替换为 student-->
+		<lookup-method name="getBean" bean="student"/>
+		<lookup-method name="getBean" bean="teacher"/>
+	</bean>
+
+	<bean id="teacher" class="com.summer.spring.lookup.Teacher"/>
+	<bean id="student" class="com.summer.spring.lookup.Student"/>
+
+
+</beans>

@@ -66,14 +66,17 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	 * XML parser.
 	 */
 	@Override
+	//通过SAX解析XML文档
 	public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,
 			ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
-
+		//首先创建DocumentBuilderFactory
 		DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
 		}
+		//通过DocumentBuilderFactory创建DocumentBuilder
 		DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
+		//解析inputSource来返回Document对象
 		return builder.parse(inputSource);
 	}
 
