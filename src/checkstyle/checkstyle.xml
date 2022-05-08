@@ -245,3 +245,4 @@
 		<module name="io.spring.javaformat.checkstyle.check.SpringJUnit5Check" />
  	</module>
 </module>
+
