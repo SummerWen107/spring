@@ -19,4 +19,10 @@ public class CustomTest {
 		User user=(User) bf.getBean("testbean");
 		System.out.println(user.getUserName()+","+user.getEmail());
 	}
+
+	@Test
+	public void customElement1(){
+		System.out.println("aaaa");
+	}
+
 }

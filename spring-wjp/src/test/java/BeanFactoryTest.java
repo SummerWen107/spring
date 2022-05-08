@@ -38,7 +38,7 @@ public class BeanFactoryTest {
 		//V1:1. xmlBeanFactory初始化过程
 		BeanFactory factory = new XmlBeanFactory(byteArrayResource);
 		MyTestBean myTestBean = (MyTestBean)factory.getBean("myTestBean");
-		//System.out.println(myTestBean.getTestStr());
+		System.out.println(myTestBean.getTestStr());
 		//assertEquals("testStr",myTestBean.getTestStr());
 	}
 
