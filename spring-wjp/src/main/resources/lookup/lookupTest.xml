@@ -5,7 +5,7 @@
 	   https://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
 
-	<bean id="getBeanTest" lazy-init="false" class="com.summer.spring.lookup.GetBeanTest">
+	<bean id="getBeanTest" lazy-init="false" scope="singleton" class="com.summer.spring.lookup.GetBeanTest">
 		<!--获取器注入-->
 		<!--获取器注入是一种特殊的方法注入，它是把一个 方法 声明为 返回某种类型的bean，
 		但实际要返回的bean是在配置文件里面配置的，此方法可用在设计有些可插拔的功能上，解除程序依赖-->

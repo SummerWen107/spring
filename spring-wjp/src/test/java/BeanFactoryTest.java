@@ -35,6 +35,7 @@ public class BeanFactoryTest {
 		ClassPathResource classPathResource = new ClassPathResource("beanFactoryTest.xml");
 		InputStream inputStream = classPathResource.getInputStream();
 		ByteArrayResource byteArrayResource = new ByteArrayResource(getByteByIS(inputStream));
+		//V1:1. xmlBeanFactory初始化过程
 		BeanFactory factory = new XmlBeanFactory(byteArrayResource);
 		MyTestBean myTestBean = (MyTestBean)factory.getBean("myTestBean");
 		//System.out.println(myTestBean.getTestStr());

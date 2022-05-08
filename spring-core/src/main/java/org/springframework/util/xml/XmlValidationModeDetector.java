@@ -94,6 +94,7 @@ public class XmlValidationModeDetector {
 		try {
 			boolean isDtdValidated = false;
 			String content;
+			//V1:1.1.2.1.1.2.1.1按行读取xml文件来判断到底是DTD的xml还是XSD的xml
 			while ((content = reader.readLine()) != null) {
 				content = consumeCommentTokens(content);
 				//如果读取的行是空或者是注释则略过
@@ -111,7 +112,8 @@ public class XmlValidationModeDetector {
 					break;
 				}
 			}
-			//包含DOCTYPE就是DTD 否则就是XSD
+			//V1:1.1.2.1.1.2.1.2 返回结果
+			// 包含DOCTYPE就是DTD 否则就是XSD
 			return (isDtdValidated ? VALIDATION_DTD : VALIDATION_XSD);
 		}
 		catch (CharConversionException ex) {

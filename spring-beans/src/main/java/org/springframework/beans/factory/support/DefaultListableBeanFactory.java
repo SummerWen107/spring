@@ -928,9 +928,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		Assert.hasText(beanName, "Bean name must not be empty");
 		Assert.notNull(beanDefinition, "BeanDefinition must not be null");
-
+		//processBean:1.3.1.1: 对AbstractBeanDefinition属性中的methodOverrides校验
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				/*
+				 * 注册前的最后一次校验，这里的校验不同于之前的XML文件校验,
+				 *  主要是对于AbstractBeanDefinition属性中的methodOverrides校验，
+				 *  校验methodOverrides是否与工厂方法并存或者methodOverrides对应的方法根本不存在
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -939,11 +944,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		//processBean:1.3.1.2.:从beanDefinitionMap中查找BeanDefinition
+		//beanDefinitionMap是 ConcurrentHashMap 全局的，线程安全的
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
+		//processBean:1.3.1.3.如果beanDefinitionMap中有，那么处理注册已经注册的beanName情况
 		if (existingDefinition != null) {
+			//processBean:1.3.1.3.1.如果对应的BeanName已经注册且在配置中配置了bean不允许被覆盖，则抛出异常
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
+			//processBean:1.3.1.3.2.如果之前的BeanDefinition的Role 小于 现在的BeanDefinition的Role 则覆盖 并打印日志
 			else if (existingDefinition.getRole() < beanDefinition.getRole()) {
 				// e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE
 				if (logger.isInfoEnabled()) {
@@ -952,6 +962,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							existingDefinition + "] with [" + beanDefinition + "]");
 				}
 			}
+			//processBean:1.3.1.3.3. 如果beanDefinitionMap中的BeanDefinition和传过来新的BeanDefinition是同一个 则覆盖，并打印日志
 			else if (!beanDefinition.equals(existingDefinition)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Overriding bean definition for bean '" + beanName +
@@ -960,30 +971,41 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				//processBean:1.3.1.3.4.: 如果开启了跟踪日志，则打印覆盖信息
 				if (logger.isTraceEnabled()) {
 					logger.trace("Overriding bean definition for bean '" + beanName +
 							"' with an equivalent definition: replacing [" + existingDefinition +
 							"] with [" + beanDefinition + "]");
 				}
 			}
+			//processBean:1.3.1.3.5.: 覆盖之前的beanDefinition
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
+			//processBean:1.3.1.4.:将BeanDefinition和BeanName注册到 beanDefinitionMap 中
+			//processBean:1.3.1.4.1.如果bean创建阶段是否已经开始，那么加锁处理
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
+					//V3:1.4.1.1.向beanDefinitionMap中注册BeanDefinition
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
+					//V3:1.4.1.2记录beanName
 					updatedDefinitions.add(beanName);
 					this.beanDefinitionNames = updatedDefinitions;
+					//V3:1.4.1.3重置所有beanName对应的缓存
 					removeManualSingletonName(beanName);
 				}
 			}
+			//processBean:1.3.1.4.2. 创建过程还未开始
 			else {
 				// Still in startup registration phase
+				//processBean:1.3.1.4.2.1. 向beanDefinitionMap中注册BeanDefinition
 				this.beanDefinitionMap.put(beanName, beanDefinition);
+				//processBean:1.3.1.4.2.2.记录beanName
 				this.beanDefinitionNames.add(beanName);
+				//processBean:1.3.1..4.2.3.重置所有beanName对应的缓存
 				removeManualSingletonName(beanName);
 			}
 			this.frozenBeanDefinitionNames = null;
